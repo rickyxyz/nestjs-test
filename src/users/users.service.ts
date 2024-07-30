@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { User } from './schemas/user.schema';
@@ -8,22 +13,38 @@ export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async create(user: User): Promise<User> {
+    const existingUser = await this.userModel
+      .findOne({ username: user.username })
+      .exec();
+    if (existingUser) {
+      throw new ConflictException(
+        `User with username ${user.username} already exists`,
+      );
+    }
+
     const newUser = new this.userModel(user);
-    return newUser.save();
+    return await newUser.save();
   }
 
   async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+    return await this.userModel.find().exec();
   }
 
   async findOne(username: string): Promise<User> {
-    return this.userModel.findOne({ username }).exec();
+    const user = await this.userModel.findOne({ username }).exec();
+    if (!user) {
+      throw new NotFoundException(`User with username ${username} not found`);
+    }
+    return user;
   }
 
   async update(userId: string, updateUserDto: Partial<User>): Promise<User> {
-    const userIdObject = new Types.ObjectId(userId);
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new BadRequestException(`Invalid user ID: ${userId}`);
+    }
+
     const updatedUser = await this.userModel
-      .findByIdAndUpdate(userIdObject, updateUserDto, { new: true })
+      .findByIdAndUpdate(userId, updateUserDto, { new: true })
       .exec();
 
     if (!updatedUser) {
@@ -33,8 +54,16 @@ export class UsersService {
     return updatedUser;
   }
 
-  async delete(id: string): Promise<any> {
-    const userIdObject = new Types.ObjectId(id);
-    return this.userModel.findByIdAndDelete(userIdObject).exec();
+  async delete(id: string): Promise<User> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException(`Invalid user ID: ${id}`);
+    }
+
+    const deletedUser = await this.userModel.findByIdAndDelete(id).exec();
+    if (!deletedUser) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return deletedUser;
   }
 }
