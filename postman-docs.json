@@ -1,0 +1,334 @@
+{
+	"info": {
+		"_postman_id": "eff5379b-aabb-4a5f-9662-a0406f849da0",
+		"name": "NestJS simple API",
+		"description": "CRUD Users, CRUD Posts\n\nPlease put the access_token received from /auth/login to the collection's autorization, to use the protected endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25303950"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "/auth/login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/auth/login/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"login",
+								""
+							]
+						},
+						"description": "## Expected Payload\n\n```\n{\n  \"username\": string,\n  \"pasword\": string\n}\n\n ```\n\n---\n\n## Returns\n\n### **201**\n\n```\n{\n  access_token: string\n}\n\n ```\n\n### 400 & 500\n\n```\n{\n    \"message\": string,\n    \"error\": string,\n    \"statusCode\": integer\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"description": "For login, no logout or register here.\n\nFor registration, see /users/create"
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "/users/create",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/users",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users"
+							]
+						},
+						"description": "This endpoint is for creating new user.\n\nThis endpoint is also used for user registration.\n\n## Expected Payload\n\n```\n{\n  \"username\": string,\n  \"pasword\": string\n}\n\n ```\n\n---\n\n## Returns\n\n### **201**\n\n```\n{\n    \"username\": string,\n    \"password\": string,\n    \"_id\": string,\n    \"__v\": number\n}\n\n ```\n\n### 400 & 500\n\n```\n{\n    \"message\": string,\n    \"error\": string,\n    \"statusCode\": integer\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "/users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/users/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								""
+							]
+						},
+						"description": "This endpont require authentication.\n\nThis endpoint will return a list of all registered users.\n\n## Expected Payload\n\n```\n{\n  \"username\": string,\n  \"pasword\": string\n}\n\n ```\n\n---\n\n## Returns\n\n### **200**\n\n```\n[\n  {\n      \"username\": string,\n      \"password\": string,\n      \"_id\": string,\n      \"__v\": number\n  },\n  {\n    ...\n  }\n]\n\n ```\n\n### 401\n\n```\n{\n    \"message\": \"Unauthorized\",\n    \"statusCode\": 401\n}\n\n ```\n\n### 400 & 500\n\n```\n{\n    \"message\": string,\n    \"error\": string,\n    \"statusCode\": integer\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:username",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/users/asfas",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"asfas"
+							]
+						},
+						"description": "This endpoint require authentication\n\nThis endpoint will return the detail of a single user\n\n## Expected Payload\n\n```\n{\n  \"username\": string,\n  \"pasword\": string\n}\n\n ```\n\n---\n\n## Returns\n\n### **200**\n\n```\n{\n    \"username\": string,\n    \"password\": string,\n    \"_id\": string,\n    \"__v\": number\n}\n\n ```\n\n### 401\n\n```\n{\n    \"message\": \"Unauthorized\",\n    \"statusCode\": 401\n}\n\n ```\n\n### 400 & 500\n\n```\n{\n    \"message\": string,\n    \"error\": string,\n    \"statusCode\": integer\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:ID",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"new username\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/users/66a89fb0e9ad82c2e1d04e8a",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"66a89fb0e9ad82c2e1d04e8a"
+							]
+						},
+						"description": "This endpoint require authentication.\n\nThis endpoint is for updating the detail of the currently authenticated user,\n\nWill return the newly updated user data.\n\nJWT token will not be invalidated after update.\n\n## Expected Payload\n\n```\n{\n  \"username\"?: string,\n  \"pasword\"?: string\n}\n\n ```\n\n---\n\n## Returns\n\n### **200**\n\n```\n{\n    \"username\": string,\n    \"password\": string,\n    \"_id\": string,\n    \"__v\": number\n}\n\n ```\n\n### 401\n\n```\n{\n    \"message\": \"Unauthorized\",\n    \"statusCode\": 401\n}\n\n ```\n\n### 400 & 500\n\n```\n{\n    \"message\": string,\n    \"error\": string,\n    \"statusCode\": integer\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/users/66a79cd469aa7c5196b10758",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"66a79cd469aa7c5196b10758"
+							]
+						},
+						"description": "This endpoint require authentication.\n\nThis endpoint is for deleeting the currently authenticated user,\n\nWill return the newly updated user data.\n\nJWT token will not be invalidated after deletion.\n\n## Expected Payload\n\n```\n{\n  \"username\"?: string,\n  \"pasword\"?: string\n}\n\n ```\n\n---\n\n## Returns\n\n### **204**\n\n```\nno content\n\n ```\n\n### 401\n\n```\n{\n    \"message\": \"Unauthorized\",\n    \"statusCode\": 401\n}\n\n ```\n\n### 400 & 500\n\n```\n{\n    \"message\": string,\n    \"error\": string,\n    \"statusCode\": integer\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"description": "CRUD users.\n\nUser registration for auth is here."
+		},
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "/posts/create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"Content\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/posts/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts",
+								""
+							]
+						},
+						"description": "This endpoint requires authentication\n\nThis endpoint is for creating new post.\n\nThis endpoint is also used for user registration.\n\n## Expected Payload\n\n```\n{\n    \"content\": string\n}\n\n ```\n\n---\n\n## Returns\n\n### **201**\n\n```\n{\n    \"content\": string,\n    \"author\": string,\n    \"_id\": string,\n    \"__v\": integer\n}\n\n ```\n\n### 401\n\n```\n{\n    \"message\": \"Unauthorized\",\n    \"statusCode\": 401\n}\n\n ```\n\n### 400 & 500\n\n```\n{\n    \"message\": string,\n    \"error\": string,\n    \"statusCode\": integer\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "/posts",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/posts/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts",
+								""
+							]
+						},
+						"description": "This endpoint will return a list of all posts\n\nThe author data of the post is automatically populated\n\n## Returns\n\n### **200**\n\n```\n[\n  {\n    \"_id\": string,\n    \"content\": string,\n    \"author\": {\n        \"_id\": string,\n        \"username\": string\n    },\n    \"__v\": integer\n  },\n  {\n    ...\n  }\n]\n\n ```\n\n### 400 & 500\n\n```\n{\n    \"message\": string,\n    \"error\": string,\n    \"statusCode\": integer\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "/posts/:ID",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/posts/<POST ID>",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts",
+								"<POST ID>"
+							]
+						},
+						"description": "This endpoint will return a list of all posts\n\nThe author data of the post is automatically populated\n\n## Returns\n\n### **200**\n\n```\n{\n    \"_id\": string,\n    \"content\": string,\n    \"author\": {\n        \"_id\": string,\n        \"username\": string\n    },\n    \"__v\": integer\n}\n\n ```\n\n### 400 & 500\n\n```\n{\n    \"message\": string,\n    \"error\": string,\n    \"statusCode\": integer\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "/posts/:ID",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"New content\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/posts/<POST ID>",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts",
+								"<POST ID>"
+							]
+						},
+						"description": "This endpoint require authentication\n\nThis endpoint is for updating the content of an existing post\n\nThis endpoint will return the updated post\n\nOnly the post author is allowed to update the post content\n\n## Expected Payload\n\n```\n{\n  \"content\": string,\n}\n\n ```\n\n---\n\n## Returns\n\n### **200**\n\n```\n{\n    \"_id\": string,\n    \"content\": string,\n    \"author\": {\n        \"_id\": string,\n        \"username\": string\n    },\n    \"__v\": integer\n}\n\n ```\n\n### 401\n\n```\n{\n    \"message\": \"Unauthorized\",\n    \"statusCode\": 401\n}\n\n ```\n\n### 400 & 500\n\n```\n{\n    \"message\": string,\n    \"error\": string,\n    \"statusCode\": integer\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "/posts/:ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/posts/<POST ID>",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts",
+								"<POST ID>"
+							]
+						},
+						"description": "This endpoint require authentication.\n\nThis endpoint is for deleting a post\n\nPost can only be deleted by its author\n\n## Returns\n\n### **204**\n\n```\nno content\n\n ```\n\n### 401\n\n```\n{\n    \"message\": \"Unauthorized\",\n    \"statusCode\": 401\n}\n\n ```\n\n### 400 & 500\n\n```\n{\n    \"message\": string,\n    \"error\": string,\n    \"statusCode\": integer\n}\n\n ```"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NmE4NDg4NzFiOTdiOWJkY2Q4NDJmOTUiLCJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE3MjIzMjgyNzksImV4cCI6MTcyMjMyOTE3OX0.Cn7stile7rhykXzJKFsseAscvF-NzjBAXxCQ8RviVRk",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
