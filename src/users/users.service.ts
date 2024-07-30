@@ -17,9 +17,7 @@ export class UsersService {
       .findOne({ username: user.username })
       .exec();
     if (existingUser) {
-      throw new ConflictException(
-        `User with username ${user.username} already exists`,
-      );
+      throw new ConflictException('User already exists');
     }
 
     const newUser = new this.userModel(user);
@@ -33,14 +31,14 @@ export class UsersService {
   async findOne(username: string): Promise<User> {
     const user = await this.userModel.findOne({ username }).exec();
     if (!user) {
-      throw new NotFoundException(`User with username ${username} not found`);
+      throw new NotFoundException('Invalid ID');
     }
     return user;
   }
 
   async update(userId: string, updateUserDto: Partial<User>): Promise<User> {
     if (!Types.ObjectId.isValid(userId)) {
-      throw new BadRequestException(`Invalid user ID: ${userId}`);
+      throw new BadRequestException('Invalid ID');
     }
 
     const updatedUser = await this.userModel
@@ -48,7 +46,7 @@ export class UsersService {
       .exec();
 
     if (!updatedUser) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
+      throw new NotFoundException('Invalid ID');
     }
 
     return updatedUser;
@@ -61,7 +59,7 @@ export class UsersService {
 
     const deletedUser = await this.userModel.findByIdAndDelete(id).exec();
     if (!deletedUser) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException('Invalid ID');
     }
 
     return deletedUser;

@@ -59,11 +59,12 @@ export class UsersController {
   async findOne(@Param('username') username: string) {
     try {
       const user = await this.usersService.findOne(username);
-      if (!user) {
-        throw new NotFoundException(`User with username ${username} not found`);
-      }
+
       return user;
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(`User with username ${username} not found`);
+      }
       throw new InternalServerErrorException('Failed to retrieve user');
     }
   }

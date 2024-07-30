@@ -17,6 +17,24 @@ Since making a secure API endpoints is not stated in the challenge criteria, som
 The e2e test also only covers the `login` endpoint in the auth collection, since the challenge criteria only ask for that.
 Other `.spec.ts` that comes from NestJS are also removed.
 
+```mermaid
+---
+title: User Post Relation
+---
+erDiagram
+    USER ||--o{ POST : create
+    USER {
+        string _id
+        string username
+        string password
+    }
+    POST {
+        string _id
+        srting author
+        string content
+    }
+```
+
 ## Project Structure
 
 - **Users Module**: Handles CRUD operations for users.

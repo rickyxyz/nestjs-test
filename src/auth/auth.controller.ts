@@ -1,4 +1,10 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UnauthorizedException,
+  NotFoundException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -7,6 +13,16 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() loginDto: { username: string; password: string }) {
-    return this.authService.login(loginDto);
+    try {
+      return await this.authService.login(loginDto);
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException('User not found');
+      }
+      throw error;
+    }
   }
 }

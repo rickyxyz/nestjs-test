@@ -1,7 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  NotFoundException,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -12,17 +15,24 @@ export class AuthService {
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne(username);
-    if (user && bcrypt.compareSync(pass, user.password)) {
-      const { ...result } = user;
-      return result;
+    if (!user) {
+      throw new NotFoundException('User not found');
     }
-    return null;
+    if (pass !== user.password) {
+      throw new UnauthorizedException('Invalid password');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...result } = user.toObject();
+    return result;
   }
 
   async login(loginDto: { username: string; password: string }) {
-    const user = await this.usersService.findOne(loginDto.username);
-    if (!user || user.password !== loginDto.password) {
-      throw new Error('Invalid credentials');
+    const { username, password } = loginDto;
+    const user = await this.usersService.findOne(username);
+
+    if (!user || password !== user.password) {
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     const payload = { sub: user._id, username: user.username };
